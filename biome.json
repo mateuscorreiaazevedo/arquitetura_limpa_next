@@ -40,6 +40,12 @@
       "suspicious": {
         "noConsole": "error"
       },
+      "style": {
+        "useSelfClosingElements": {
+          "level": "error",
+          "fix": "safe"
+        }
+      },
       "correctness": {
         "noEmptyPattern": {
           "level": "warn"
