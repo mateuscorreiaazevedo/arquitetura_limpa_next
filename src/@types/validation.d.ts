@@ -1,5 +1,4 @@
-// biome-ignore lint/correctness/noUnusedVariables: <explanation>
-interface ValidationDTO {
+declare interface SchemaValidationDTO {
   safe: boolean
   message: string
 }

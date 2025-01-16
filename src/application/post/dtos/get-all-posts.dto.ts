@@ -1,5 +1,5 @@
 import type { Post } from '@/domains/post'
-import { z } from 'zod'
+import { GetAllPostsSchema } from '@/infra/schemas/post/get-all-posts.schema'
 
 export interface IPostResponseDTO {
   postId: string
@@ -14,14 +14,14 @@ export class PostResponseDTO {
     const data: IPostResponseDTO[] = []
 
     this.posts.forEach(post => {
-      if (post.id && !this.validateId(post.id).safe) {
-        throw new Error(this.validateId(post.id).message)
+      if (post.id && !GetAllPostsSchema.validateId(post.id).safe) {
+        throw new Error(GetAllPostsSchema.validateId(post.id).message)
       }
-      if (post.title && !this.validateTitle(post.title).safe) {
-        throw new Error(this.validateTitle(post.title).message)
+      if (post.title && !GetAllPostsSchema.validateTitle(post.title).safe) {
+        throw new Error(GetAllPostsSchema.validateTitle(post.title).message)
       }
-      if (post.content && !this.validateContent(post.content).safe) {
-        throw new Error(this.validateContent(post.content).message)
+      if (post.content && !GetAllPostsSchema.validateContent(post.content).safe) {
+        throw new Error(GetAllPostsSchema.validateContent(post.content).message)
       }
 
       data.push({
@@ -36,30 +36,5 @@ export class PostResponseDTO {
 
   get lastUpdated(): string {
     return new Date().toISOString()
-  }
-
-  private validateId(id: string): ValidationDTO {
-    const schemaId = z.string().min(1, { message: 'MIN_LENGTH_ID' }).regex(/^\d+$/, { message: 'ONLY_NUMBERS_ID' })
-
-    return {
-      safe: schemaId.safeParse(id).success,
-      message: schemaId.safeParse(id).error?.errors[0]?.message ?? '',
-    }
-  }
-  private validateTitle(title: string): ValidationDTO {
-    const schemaTitle = z.string().min(10, { message: 'MIN_LENGTH_TITLE' })
-
-    return {
-      safe: schemaTitle.safeParse(title).success,
-      message: schemaTitle.safeParse(title).error?.errors[0]?.message ?? '',
-    }
-  }
-  private validateContent(content: string): ValidationDTO {
-    const schemaContent = z.string().min(10, { message: 'MIN_LENGTH_CONTENT' })
-
-    return {
-      safe: schemaContent.safeParse(content).success,
-      message: schemaContent.safeParse(content).error?.errors[0]?.message ?? '',
-    }
   }
 }
