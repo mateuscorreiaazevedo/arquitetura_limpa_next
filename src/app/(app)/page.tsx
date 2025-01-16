@@ -1,5 +1,5 @@
 import { postFactory } from '@/main/factories/post'
-import { PostItem } from './__components/post/post-item'
+import { PostItem } from './__components/post'
 
 export default async function App() {
   const { data } = await postFactory.getAllPosts.execute()
