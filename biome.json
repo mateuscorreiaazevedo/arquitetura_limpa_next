@@ -44,7 +44,11 @@
         "useSelfClosingElements": {
           "level": "error",
           "fix": "safe"
-        }
+        },
+        "noNonNullAssertion": "off"
+      },
+      "complexity": {
+        "noForEach": "off"
       },
       "correctness": {
         "noEmptyPattern": {

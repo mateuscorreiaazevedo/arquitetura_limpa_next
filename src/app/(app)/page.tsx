@@ -1,21 +1,13 @@
-import axios from 'axios'
-
-type Post = {
-  id: string
-  title: string
-  content: string
-}
+import { postFactory } from '@/main/factories/post'
+import { PostItem } from './__components/post/post-item'
 
 export default async function App() {
-  const { data } = await axios.get<Post[]>('http://localhost:8080/posts')
+  const { data } = await postFactory.getAllPosts.execute()
 
   return (
     <div className="flex flex-col gap-2 p-4">
       {data.map(item => (
-        <div key={item.id} className="border flex flex-col gap-2 p-4">
-          <h2>{item.title}</h2>
-          <p className="pl-4 italic">{item.content}</p>
-        </div>
+        <PostItem key={item.postId} {...item} />
       ))}
     </div>
   )
