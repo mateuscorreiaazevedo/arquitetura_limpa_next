@@ -1,14 +1,10 @@
-import { postFactory } from '@/main/factories/post'
-import { PostItem } from './_components/post'
+import { PostList } from './_components/post'
 
-export default async function App() {
-  const { data } = await postFactory.getAllPosts.execute()
-
+export default function HomePage() {
   return (
     <div className="flex flex-col gap-2 p-4">
-      {data.map(item => (
-        <PostItem key={item.postId} {...item} />
-      ))}
+      <h1 className="text-center">Posts</h1>
+      <PostList />
     </div>
   )
 }
