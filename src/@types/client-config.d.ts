@@ -1,8 +1,7 @@
-declare type AccessRoleType = 'admin' | 'employee' | 'manager'
+declare type AccessRoleType = 'ADMIN' | 'EMPLOYEE' | 'MANAGER'
+declare type CreationRoleUserType = 'EXTERNAL' | 'INTERNAL'
 
-declare interface ClientConfigPermission {
-  [key: AccessRoleType]: string[]
-}
+declare type ClientConfigPermission = Record<CreationRoleUserType, Record<AccessRoleType, string[]>>
 
 // @param key: key of translation in i18n for example: sidebar.menu.dashboard
 // @param path: path of the route for example: /dashboard or /settings

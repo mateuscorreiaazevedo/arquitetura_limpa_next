@@ -1,0 +1,17 @@
+export const clientConfigExternalAdminPermissions: string[] = [
+  '/dashboard/admin',
+  '/profiles',
+  '/reports',
+  '/settings',
+  '/registrations/employees',
+  '/registrations/turns',
+  '/registrations/positions',
+  '/registrations/departments',
+  '/registrations/teams',
+  '/registrations/work-locations',
+  '/registrations/cost-centers',
+  '/registrations/punch-in',
+  '/registrations/business-units',
+  '/point-management',
+  '/notifications',
+]
