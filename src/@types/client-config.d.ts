@@ -1,4 +1,4 @@
-declare type AccessRoleType = 'admin' | 'user' | 'manager'
+declare type AccessRoleType = 'admin' | 'employee' | 'manager'
 
 declare interface ClientConfigPermission {
   [key: AccessRoleType]: string[]
