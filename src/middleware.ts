@@ -1,41 +1,42 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import {
-  AccessRoleEnum,
-  CreationRoleUserEnum,
-  clientConfig,
+  type AccessRoleEnum,
+  type CreationRoleUserEnum,
+  clientConfigPermissions,
+  validateToLoggedUserRoles,
   validateToRouteIsAllowedInClientConfigPermissions,
 } from './main/config/client'
+
+const publicRoutes: string[] = ['/login', '/signup']
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
 
-  const _token = req.cookies.get('auth.token')?.value
-  // biome-ignore lint/style/useConst: <explanation>
-  let accessRole: AccessRoleEnum | undefined
-  // biome-ignore lint/style/useConst: <explanation>
-  let userRole: CreationRoleUserEnum | undefined
+  const authToken = req.cookies.get('auth.token')?.value
+  let accessLevel: AccessRoleEnum | undefined
+  let accessRole: CreationRoleUserEnum | undefined
 
-  if (['/login', '/register'].includes(pathname)) {
-    return NextResponse.next()
+  const redirectToLogin = NextResponse.redirect(new URL('/login', req.url))
+
+  try {
+    const payload = authToken ? JSON.parse(atob(authToken)) : undefined
+    accessLevel = (payload?.levelAccessRole as AccessRoleEnum) || undefined
+    accessRole = (payload?.levelUserRole as CreationRoleUserEnum) || undefined
+  } catch (_error) {
+    return redirectToLogin
   }
 
-  // try {
-  //   const payload = token ? JSON.parse(atob(token.split('.')[1])) : undefined
-  //   userRole = (payload?.levelUserRole as CreationRoleUserEnum) || undefined
-  //   accessRole = (payload?.levelAccessRole as AccessRoleEnum) || undefined
-  // } catch (_e) {
-  //   throw new Error('Error decoding token')
-  // }
-
-  accessRole = AccessRoleEnum.MANAGER
-  userRole = CreationRoleUserEnum.EXTERNAL
-
-  if (!accessRole || !userRole) {
-    return NextResponse.redirect(new URL('/login', req.url))
+  if (!accessLevel || !accessRole) {
+    return redirectToLogin
   }
 
-  const allowedRoutes = clientConfig[userRole][accessRole] || []
+  const allowedRoutes = clientConfigPermissions[accessRole][accessLevel] || []
   const routeAllowed = validateToRouteIsAllowedInClientConfigPermissions(pathname, allowedRoutes)
+  const redirectDashboardByTypeOfUserAccess = validateToLoggedUserRoles(accessRole, accessLevel)
+
+  if ([...publicRoutes, '/'].includes(pathname)) {
+    return NextResponse.redirect(new URL(redirectDashboardByTypeOfUserAccess, req.url))
+  }
 
   if (!routeAllowed) {
     return NextResponse.redirect(new URL('/not-found', req.url))
@@ -46,6 +47,8 @@ export function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
+    '/',
+    '/login',
     '/dashboard/admin',
     '/profiles',
     '/reports',

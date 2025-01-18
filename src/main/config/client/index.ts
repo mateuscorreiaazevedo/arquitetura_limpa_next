@@ -15,7 +15,7 @@ export enum CreationRoleUserEnum {
   INTERNAL = 'INTERNAL',
 }
 
-export const clientConfig: ClientConfigPermission = {
+export const clientConfigPermissions: ClientConfigPermission = {
   [CreationRoleUserEnum.EXTERNAL]: {
     [AccessRoleEnum.ADMIN]: clientConfigExternalAdminPermissions,
     [AccessRoleEnum.MANAGER]: clientConfigExternalManagerPermissions,
@@ -48,4 +48,28 @@ export function validateToRouteIsAllowedInClientConfigPermissions(pathname: stri
 
     return false
   })
+}
+
+export function validateToLoggedUserRoles(
+  creationRole: CreationRoleUserEnum | null,
+  accessRole: AccessRoleEnum | null,
+): string {
+  if (!creationRole || !accessRole) {
+    return '/login'
+  }
+
+  const validationLoggedUserRoles: ValidationLoggedUserRoles = {
+    [CreationRoleUserEnum.EXTERNAL]: {
+      [AccessRoleEnum.ADMIN]: '/dashboard/admin',
+      [AccessRoleEnum.MANAGER]: '/dashboard/admin',
+      [AccessRoleEnum.EMPLOYEE]: '/dashboard/employee',
+    },
+    [CreationRoleUserEnum.INTERNAL]: {
+      [AccessRoleEnum.ADMIN]: '/dashboard/admin',
+      [AccessRoleEnum.EMPLOYEE]: '/dashboard/employee',
+      [AccessRoleEnum.MANAGER]: '/dashboard/admin',
+    },
+  }
+
+  return validationLoggedUserRoles[creationRole][accessRole]
 }

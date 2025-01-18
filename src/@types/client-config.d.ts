@@ -9,3 +9,5 @@ declare interface ClientConfigSidebarOption {
   key: string
   path: string
 }
+
+declare type ValidationLoggedUserRoles = Record<CreationRoleUserType, Record<AccessRoleType, string>>
