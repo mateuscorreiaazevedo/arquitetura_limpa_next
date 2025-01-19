@@ -1,10 +1,11 @@
+import { env } from '@/main/config/env'
 import axios, { type AxiosResponse, type AxiosInstance, type AxiosError } from 'axios'
 import type { HttpClient, HttpRequest, HttpResponse } from './http-client'
 
 export class AxiosHttpClient implements HttpClient {
   private axiosInstance: AxiosInstance
 
-  constructor(private readonly baseUrl = process.env.NEXT_PUBLIC_API_URL) {
+  constructor(private readonly baseUrl = env.baseUrl) {
     this.axiosInstance = axios.create({
       baseURL: this.baseUrl,
     })

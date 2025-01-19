@@ -38,7 +38,8 @@
     "rules": {
       "recommended": true,
       "suspicious": {
-        "noConsole": "error"
+        "noConsole": "error",
+        "noConfusingVoidType": "off"
       },
       "style": {
         "useSelfClosingElements": {
